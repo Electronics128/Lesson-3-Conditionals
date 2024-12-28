@@ -1,41 +1,54 @@
-import subprocess
+import lesson_03_practical
+from unittest.mock import patch
 
-def test_lesson_03_practical():
-    result = subprocess.run(['python3', 'lesson_03_practical.py'], capture_output=True, text=True)
-    output = result.stdout.strip().splitlines()
+def test_eligibility_checker():
+    with patch('builtins.input', return_value="18"):
+        result = lesson_03_practical.check_eligibility()
+        assert result == "You are eligible to drive.", "Eligibility check failed for age 18."
 
-    # Detailed checks for each TODO
-    try:
-        assert "eligible" in output[0], "TODO 1 Failed: Eligibility checker didn't print correct message."
-        print("TODO 1 Passed: Eligibility checker works.")
-    except AssertionError as e:
-        print(e)
+    with patch('builtins.input', return_value="16"):
+        result = lesson_03_practical.check_eligibility()
+        assert result == "You are not eligible to drive.", "Eligibility check failed for age 16."
 
-    try:
-        assert "final price" in output[1], "TODO 2 Failed: Discount calculator didn't return final price."
-        print("TODO 2 Passed: Discount calculator works.")
-    except AssertionError as e:
-        print(e)
+def test_discount_calculator():
+    result = lesson_03_practical.calculate_discount(150)
+    assert result == 135.0, "Discount calculation failed for amount > $100."
 
-    try:
-        assert any(status in output[2] for status in ["Hot", "Warm", "Cold"]), "TODO 3 Failed: Temperature warning incorrect."
-        print("TODO 3 Passed: Temperature warning works.")
-    except AssertionError as e:
-        print(e)
+    result = lesson_03_practical.calculate_discount(50)
+    assert result == 47.5, "Discount calculation failed for amount <= $100."
 
-    try:
-        assert "tax" in output[3], "TODO 4 Failed: Tax bracket calculator did not return tax details."
-        print("TODO 4 Passed: Tax bracket calculator works.")
-    except AssertionError as e:
-        print(e)
+def test_temperature_warning():
+    with patch('builtins.input', return_value="35"):
+        result = lesson_03_practical.temperature_warning()
+        assert result == "Hot", "Temperature warning failed for temperature > 30."
 
-    try:
-        assert any(word in output[4] for word in ["wins", "Draw"]), "TODO 5 Failed: Rock-Paper-Scissors game logic incorrect."
-        print("TODO 5 Passed: Rock-Paper-Scissors game works.")
-    except AssertionError as e:
-        print(e)
+    with patch('builtins.input', return_value="20"):
+        result = lesson_03_practical.temperature_warning()
+        assert result == "Warm", "Temperature warning failed for 15 <= temperature <= 30."
 
-    print("Testing completed for Lesson 3 Practical Examples.")
+    with patch('builtins.input', return_value="10"):
+        result = lesson_03_practical.temperature_warning()
+        assert result == "Cold", "Temperature warning failed for temperature < 15."
 
-if __name__ == "__main__":
-    test_lesson_03_practical()
+def test_tax_bracket_calculator():
+    result = lesson_03_practical.calculate_tax(5000)
+    assert result == 0, "Tax calculation failed for income < $10,000."
+
+    result = lesson_03_practical.calculate_tax(30000)
+    assert result == 3000, "Tax calculation failed for $10,000 <= income <= $50,000."
+
+    result = lesson_03_practical.calculate_tax(75000)
+    assert result == 15000, "Tax calculation failed for income > $50,000."
+
+def test_rock_paper_scissors():
+    with patch('builtins.input', return_value="Rock"), patch('random.choice', return_value="Scissors"):
+        result = lesson_03_practical.rock_paper_scissors()
+        assert result == "You win! Rock beats Scissors.", "Rock-Paper-Scissors failed for Rock vs Scissors."
+
+    with patch('builtins.input', return_value="Paper"), patch('random.choice', return_value="Rock"):
+        result = lesson_03_practical.rock_paper_scissors()
+        assert result == "You win! Paper beats Rock.", "Rock-Paper-Scissors failed for Paper vs Rock."
+
+    with patch('builtins.input', return_value="Scissors"), patch('random.choice', return_value="Scissors"):
+        result = lesson_03_practical.rock_paper_scissors()
+        assert result == "It's a tie!", "Rock-Paper-Scissors failed for Scissors vs Scissors."
