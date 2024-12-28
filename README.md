@@ -79,8 +79,13 @@ Here are additional real-world examples to enhance your understanding:
 ## How to Test Your Solutions
 Two test scripts are available to validate your solutions:
 
-### Testing TODO Exercises
-To test the TODO exercises in `lesson_03.py`, run:
+### Testing Theoretical Exercises
+To test the Theoretical exercises in `lesson_03.py`, run:
 ```bash
 python3 test_lesson_03.py
+```
+### Testing Practical Excercises
+To test the Practical exercises in `lesson_03_practical.py`, run:
+```bash
 python3 test_lesson_03_practical.py
+```
